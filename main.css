@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  object-fit: contain;
+  box-sizing: border-box;
+}
+
+body {
+  background: #e3e3db;
+}
+
+main {
+  max-height: 80vh;
+  display: grid;
+  grid-template-columns: .5fr 1.5fr;
+  padding: 5%;
+  
+}
+
+.color-2 {
+  background: #b9dac9;
+  height: 40vh;
+}
+
+.color-3 {
+  background: #5b9fa7;
+  height: 40vh;
+  width: 100%;
+}
+
+.square-box {
+  position: relative;
+  overflow: hidden;
+}
+
+.color-4 {
+  background: #e6e7e2;
+  background: #ee7a68;
+  background: blue;
+  height: 80vh;
+}
+
+.color-5 {
+  background: #ee7a68;
+  border-radius: 100%;
+  position: absolute;
+  height: 160vh;
+  width: 160vh;
+  z-index: 1000;
+  top: 0;
+  left: 39%;
+}
