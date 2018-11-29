@@ -1,5 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const environment = process.env.NODE_ENV || 'development';
+const config = require('./knexfile')[environment];
+const database = require('knex')(config);
 
 const app = express();
 
@@ -41,26 +44,60 @@ app.locals.projects = [
 app.set('port', process.env.PORT || 3000);
 
 app.get('/api/v1/projects', (request, response) => {
-  const projects = app.locals.projects;
-  
-  return response.status(200).json(projects);
-  // get projects
-  // should just return names and ID numbers
+  // const projects = app.locals.projects;
+  database('projects').select()
+  .then(projects => {
+    response.status(200).json(projects)
+  })
+  .catch(error => {
+    response.status(500).json({ error: error.message })
+  })
 })
 
-// app.get('/api/v1/palettes', (request, response) => {
-// })
+app.get('/api/v1/palettes', (request, response) => {
+  // const palettes = app.locals.palettes;
+  database('palettes').select()
+  .then(palettes => {
+    response.status(200).json(palettes)
+  })
+  .catch(error => {
+    response.status(500).json({ error: error.message })
+  })
+})
 
-// app.get('/generate-palette', (request, response) => {
-//   const randomColor = () => {
-//     return "#" + Math.floor(Math.random() * 16777215).toString(16);
-//   };
-//   const getPalette = () => {
-//     return [randomColor(), randomColor(), randomColor(), randomColor(), randomColor()]
-//   };
-  
-//   return response.status(200).json(getPalette());
-// });
+app.post('/api/v1/projects', (request, response) => {
+  const project = request.body;
+
+  if(!project.name) {
+    response.status(422).json({ error: 'missing required param of name'})
+  }
+
+  database('projects').insert(project, 'id')
+    .then(projectIds => {
+      response.status(201).json({ id: projectIds[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error: error.message })
+    })
+})
+
+app.post('/api/v1/palettes', (request, response) => {
+  const palette = request.body;
+
+  for(let requiredParam of ['name', 'hex_1', 'hex_2', 'hex_3', 'hex_4', 'hex_5']) {
+    if(!palette[requiredParam]) {
+      response.status(422).json({ error: `missing required param of ${requiredParam}`})
+    }
+  }
+
+  database('palettes').insert(palette, 'id')
+    .then(paletteIds => {
+      response.status(201).json({ id: paletteIds[0] })
+    })
+    .catch(error => {
+      response.status(500).json({ error: error.message })
+    })
+})
 
 app.listen(app.get('port'), () => {
   console.log(`App is now running on ${app.get('port')}`);
