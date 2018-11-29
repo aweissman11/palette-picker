@@ -10,6 +10,13 @@ const app = express();
 
 app.use(bodyParser.json());
 
+app.use(express.static('public'));
+
+app.get('/', (request, response) => {
+  // response is actually handled by static asset express middleware
+  // defined by app.use(express.static('public'));
+});
+
 app.locals.title = 'Palette Picker';
 app.locals.projects = [
   {
