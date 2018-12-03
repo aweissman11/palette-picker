@@ -6,52 +6,13 @@ const database = require('knex')(config);
 
 const app = express();
 
-// const { getPalette } = require('./getPalette');
-
 app.use(bodyParser.json());
 
 app.use(express.static('public'));
 
-app.get('/', (request, response) => {
-  // response is actually handled by static asset express middleware
-  // defined by app.use(express.static('public'));
-});
-
-app.locals.title = 'Palette Picker';
-app.locals.projects = [
-  {
-    name: 'Aaron',
-    id: 1
-  },
-  {
-    name: 'pallete 2',
-    id: 2
-  },
-  {
-    name: 'palette 3', 
-    id: 3
-  },
-  {
-    name: 'another palette',
-    id: 4
-  }
-];
-
-// app.locals.palettes = [
-//   {
-
-//   }
-// ]
-
-// colors: ['#badass', '#asdf87', '#aqwe76', '#ini907', '#jhsjdf'],
-// colors: ['#badass', '#asdfad', '#sadfew', '#hither', '#dither'],
-// colors: ['#badass', '#franki', '#gideon', '#fgj908', '#dolly0'],
-// colors: ['#badass', '#chelse', '#joel53', '#asdfgh', '#aaron1'],
-
 app.set('port', process.env.PORT || 3000);
 
 app.get('/api/v1/projects', (request, response) => {
-  // const projects = app.locals.projects;
   database('projects').select()
   .then(projects => {
     response.status(200).json(projects)
@@ -72,14 +33,66 @@ app.get('/api/v1/palettes', (request, response) => {
   })
 })
 
+app.get('/api/v1/palettes/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).select()
+  .then(palettes => {
+    if (palettes.length) {
+      response.status(200).json(palettes);
+    } else {
+      response.status(404).json({
+        error: `Could not find palette with id ${request.params.id}`
+      });
+    }
+  })
+  .catch(error => {
+    response.status(500).json({ error })
+  })
+})
+
+app.delete('/api/v1/palettes/:id', (request, response) => {
+  database('palettes').where('id', request.params.id).del()
+  .then(palette => {
+    if (palette > 0) {
+      response.status(200).json({ message: `palette ${request.params.id} deleted`});
+    } else {
+      response.status(404).json({
+        error: `No palette with id ${request.params.id} exists`
+      });
+    }
+  })
+  .catch(error => {
+    response.status(500).json({ error })
+  })
+})
+
+app.get('/api/v1/projects/:id', (request, response) => {
+  database('palettes').where('project_id', request.params.id).select()
+    .then(projects => {
+      if (projects.length) {
+        response.status(200).json(projects);
+      } else {
+        response.status(404).json({ 
+          error: `Could not find any palettes for project id ${request.params.id}`
+        });
+      }
+    })
+    .catch(error => {
+      response.status(500).json({ error });
+    });
+});
+
 app.post('/api/v1/projects', (request, response) => {
   const project = request.body;
 
-  if(!project.name) {
-    response.status(422).json({ error: 'missing required param of name'})
+  for (let requiredParam of ['name']) {
+    if(!project[requiredParam]) {
+      return response
+        .status(422)
+        .send({ error: 'missing required param of name'})
+    }
   }
-
-  database('projects').insert(project, 'id')
+    
+    database('projects').insert(project, 'id')
     .then(projectIds => {
       response.status(201).json({ id: projectIds[0] })
     })
@@ -88,12 +101,16 @@ app.post('/api/v1/projects', (request, response) => {
     })
 })
 
-app.post('/api/v1/palettes', (request, response) => {
+app.post('/api/v1/palettes/', (request, response) => {
   const palette = request.body;
 
-  for(let requiredParam of ['name', 'hex_1', 'hex_2', 'hex_3', 'hex_4', 'hex_5']) {
+  for(let requiredParam of [
+    'name', 'hex_1', 'hex_2', 'hex_3', 'hex_4', 'hex_5', 'project_id'
+  ]) {
     if(!palette[requiredParam]) {
-      response.status(422).json({ error: `missing required param of ${requiredParam}`})
+      return response
+        .status(422)
+        .send({ error: `missing required param of ${requiredParam}`})
     }
   }
 
