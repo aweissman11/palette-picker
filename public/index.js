@@ -192,7 +192,6 @@ function showPalette() {
   currentPaletteId = event.target.id;
   $('.lock').addClass('unlocked');
   lockedPalettes = [null, null, null, null, null];
-  console.log(paletteIsSaved)
   if (!paletteIsSaved) {
     window.setTimeout(() => $('body').addClass('delete-palette-alert'), 25);
     window.setTimeout(() => $('body').removeClass('delete-palette-alert'), 300)

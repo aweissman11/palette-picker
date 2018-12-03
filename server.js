@@ -1,13 +1,19 @@
+// require the express
 const express = require('express');
+// require body parser
 const bodyParser = require('body-parser');
+// set up the environment
 const environment = process.env.NODE_ENV || 'development';
+// configure the environment and require the knexfile
 const config = require('./knexfile')[environment];
+// set the database as the knex database
 const database = require('knex')(config);
-
+// set up app as the express server
 const app = express();
-
+// user bodyParser on the express server
 app.use(bodyParser.json());
-
+// this sends the static html, css and javascript files to the server
+// this allows the client to see the code
 app.use(express.static('public'));
 
 app.set('port', process.env.PORT || 3000);
