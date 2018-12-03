@@ -2,43 +2,71 @@
   <head>
     <title>Palette Picker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Unlock" rel="stylesheet">
+    <link href="lock.css" rel="stylesheet">
+    <link href="dropdown.css" rel="stylesheet">
     <link href="main.css" rel="stylesheet">
   </head>
   <body>
     <main>
       <section class="main-content">
         <section class="boxes">
-          <div class="color-1">
+          <div class="color-1 color-1-box">
             <div class="title-box">
-              <p class="logo-p"><span class="logo">PP</span></p>
-              <p class="projects-dropdown">Projects +</p>
-              <p class="palettes-dropdown">Palettes +</p>
+              <h1 class="logo-p"><span class="logo">PP</span></h1>
+              <div class="dropdown">
+                <button class="dropbtn">Projects</button>
+                <div class="dropdown-content projects">
+                </div>
+              </div>
             </div>
+            <form class="new-project">
+              <input class="new-project-input" placeholder="new project name"></input>
+              <button class="create-project-btn">Create New Project</button>
+            </form>
           </div>
-          <div class="color-2">
-            <div class="color-2-circle">
-              <div class="hexes">
-                <p>Hex Values:</p>
-                <p>#FFFFFF</p>
-                <p>#FFFFFF</p>
-                <p>#FFFFFF</p>
-                <p>#FFFFFF</p>
-                <p>#GGGGGG</p>
-                <p>Save/Delete</p>
+          <div class="color-2 color-2-box">
+            <div class="color-2 color-2-circle">
+              <div class="hex-box">
+                <div class="hexes">
+                  <p class="lock-1 lock unlocked"></p>
+                  <p class="lock-hex-1">#FFFFFF</p>
+                  <p class="color-1 color-swatch-1 swatch"></p>
+                  <p class="lock-2 lock unlocked"></p>
+                  <p class="lock-hex-2">#FFFFFF</p>
+                  <p class="color-2 color-swatch-2 swatch"></p>
+                  <p class="lock-3 lock unlocked"></p>
+                  <p class="lock-hex-3">#FFFFFF</p>
+                  <p class="color-3 color-swatch-3 swatch"></p>
+                  <p class="lock-4 lock unlocked"></p>
+                  <p class="lock-hex-4">#FFFFFF</p>
+                  <p class="color-4 color-swatch-4 swatch"></p>
+                  <p class="lock-5 lock unlocked"></p>
+                  <p class="lock-hex-5">#FFFFFF</p>
+                  <p class="color-5 color-swatch-5 swatch"></p>
+                </div>
+                <form class="save-new-palette">
+                  <input class="new-palette" placeholder="palette name"></input>
+                  <button class="save-btn">Save</button>
+                </form>
+                <button class="delete-btn hide-btn">Delete</button>
               </div>
             </div>
           </div>
         </section>
         <section class="square-box">
-          <div class="color-3"></div>
-          <div class="color-4"></div>
-          <div class="color-5">
-              <p>Generate Palette</p>
+          <div class="color-3 color-3-box"></div>
+          <div class="color-4 color-4-box"></div>
+          <div class="color-5 color-5-box">
+              <button class="generate-btn">Generate Palette</button>
+          </div>
+          <div class="current-project">
+            <p class="project-text">PALETTE PALS</p>
           </div>
         </section>
       </section>
     </main>
-    <script src="jquery-v-3.3.1.js"></script>
-    <!-- <script src="./scripts.js"></script> -->
+    <script src="./jquery/jQuery.3.3.1.js"></script>
+    <script src="./index.js"></script>
   </body>
 </HTML>
